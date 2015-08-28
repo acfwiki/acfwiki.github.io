@@ -1,0 +1,6 @@
+/index.php?title=*&action=edit.html
+/index.php?title=*&oldid=*.html
+/index.php?title=*&redirect=no&printable=yes.html
+/index.php?title=特殊:上传文件&*
+/index.php?title=特殊:用户登录&*
+

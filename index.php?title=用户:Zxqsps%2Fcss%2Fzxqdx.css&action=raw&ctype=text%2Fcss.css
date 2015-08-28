@@ -1,0 +1,95 @@
+﻿/* Mediawiki Reset */
+/****
+#mw-panel {display:none;}
+div#content {margin: 0 auto;}
+****/
+#content {
+box-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
+}
+#scrollDiv {display:none;}
+div#content a.external, div#content a.external[href^="gopher://"] {
+color: #eee;
+background: transparent;
+padding-right: 0px;
+}
+#mw-panel.collapsible-nav div.portal h5 {
+color: #fff;
+}
+.firstHeading, #firstHeading {
+color: #D1EEEE;
+}
+#toc, .toc, .mw-warning {
+border: 1px solid #A7D7F9;
+background-color: transparent;
+}
+.navbox, .navbox-subgroup {
+background: transparent;
+}
+.navbox th, .navbox-title {
+background: #aaa;
+}
+.navbox-even {
+background: #333;
+}
+.catlinks {
+background-color: transparent;
+}
+/* CSS Reset */
+h1,h3,h4,h5,h6,ul,li{
+	color: #eee;
+}
+ul,li {
+	list-style:none;
+	border-left:4px solid #aaa;
+	margin:8px 0;
+	padding:0 0 0 5px;
+}
+#toc h2, .toc h2 {
+background: transparent!important;
+color: #eee;
+}
+h2 {
+background-image: linear-gradient(right , rgb(128,128,128) 0%, rgb(240,240,240) 60%)!important;
+background-image: -o-linear-gradient(right , rgb(128,128,128) 0%, rgb(240,240,240) 60%)!important;
+background-image: -moz-linear-gradient(right , rgb(128,128,128) 0%, rgb(240,240,240) 60%)!important;
+background-image: -webkit-linear-gradient(right , rgb(128,128,128) 0%, rgb(240,240,240) 60%)!important;
+background-image: -ms-linear-gradient(right , rgb(128,128,128) 0%, rgb(240,240,240) 60%)!important;
+background-image: -webkit-gradient(
+	linear,
+	right top,
+	left top,
+	color-stop(0, rgb(128,128,128)),
+	color-stop(0.6, rgb(240,240,240))
+)!important;
+background: -moz-linear-gradient(left, #eee, #333)!important;
+FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=1,startColorStr=#eeeeee,endColorStr=#333333);
+background-color: none!important;
+border-bottom: #aaa 4px solid;
+}
+body {
+//	background:url(http://trend.acfun.tv/others/html-bg.jpg) center right repeat-y!important;
+	background:#333;
+}
+p {
+	color: #eee;
+}
+a {
+	font-family: "Microsoft YaHei", "微软雅黑", tahoma, arial, simsun, "宋体";
+	text-decoration: none;
+	cursor: pointer;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+//	color: #ccc!important;
+	color: #C4E1FF!important;
+	border:1px solid transparent!important;
+}
+a:hover {
+//	color: #eee!important;
+	background-color: #004B97;
+	color: #ECF5FF!important;
+	border:1px solid #75ADDF!important;
+	border-radius: 4px;
+}
+a:link {
+	text-decoration: none;
+}

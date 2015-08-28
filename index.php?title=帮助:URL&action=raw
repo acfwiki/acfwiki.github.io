@@ -1,0 +1,151 @@
+﻿==外部链接的URL==
+
+A [[Help:Link|link]] in external link style can be of the forms:
+*''target'': <nowiki>http://meta.wikimedia.org/</nowiki> is rendered as http://meta.wikimedia.org/
+*[ ''target'' ''label'' ], with a blank space in between: <nowiki> [http://meta.wikimedia.org/ wikimedia] </nowiki> gives [http://meta.wikimedia.org/ wikimedia] (see also [[Help:Piped link]])
+*[ ''target'' ] - these are automatically labelled with serial numbers 1, 2, 3, ...:<nowiki> [http://meta.wikimedia.org/]</nowiki> gives [http://meta.wikimedia.org/]
+
+The target is a URL which can start with "<nowiki>http://</nowiki>" or "<nowiki>ftp://</nowiki>";
+
+"file://" does not work by default. If enabled it only works in MSIE. To enable it, add a $wgUrlProtocols entry to [[LocalSettings.php]]; see the $wgUrlProtocols in [[DefaultSettings.php]] for example.
+
+All [[Help:Special characters|character]]s of the URL must be among:
+ A-Z a-z 0-9 ._\/~%-+&amp;#?!=()@
+
+If a URL contains a different character it should be converted; for example, ^ has to be written %5e, the hexadecimal [[w:ASCII|ASCII]] value with a percent sign in front. A blank space can also be converted into an underscore.
+
+Conversion:
+
+       "   #   $   %   &amp;<!-- -->   '  (   )   *   ,   :   ;
+ %20 %22 %23 %24 %25 %26 <!--     -->%27 %28 %29 %2a %2c %3a %3b
+
+  <   >   ?   [   ]   ^   `   {   |   }
+ %3c %3e %3f %5b %5d %5e %60 %7b %7c %7d
+
+For the other characters either the code or the character can be used in internal and external links, they are equivalent. The system does a conversion when needed. E.g.
+
+<nowiki>[[%C3%80_propos_de_M%C3%A9ta]]</nowiki>
+
+is rendered as [[%C3%80_propos_de_M%C3%A9ta]], almost like [[ à propos de Méta]], which leads to this page on Meta with in the address bar the URL
+
+http://meta.wikipedia.org/wiki/%C3%80_propos_de_M%C3%A9ta
+
+while http://meta.wikipedia.org/wiki/à_propos_de_Méta leads to the same.
+
+See also (in Wikipedia): [[w:Internationalized domain names|Internationalized domain names]] and [[:en:Punycode|Punycode]].
+
+===Percent-encoding===
+For ASCII characters (up to decimal 127, hex. 7F) percent-encoding simply means adding '''%''' to the hex. value, e.g. for
+a tilde '''~''' (decimal 126, hex. 7E) it's %7E. Otherwise (non-ASCII) convert it first to UTF-8 and then percent-encode it. Example:
+
+# Convert the character to Unicode, e.g. Latin-1 192 (hex. C0) to à (u+00C0), or windows-1252 131 (hex. 8B) to ? (u+0160).
+# Convert Unicode to bits, 00000000 11000000 (u+00C0), or 00000001 01100000 (u+0160).
+# Build groups of six bits from the right adding leading zeros if necessary until the rest are zeros: 000011 000000 (u+00C0), or 000101 100000 (u+0160).
+# Add '''10''' in front of all but the leftmost group. 2 bits + 6 bits = 8bits, also known as octet.
+# If there are only two groups, and the first (left) starts with 0:
+## Add '''11''' to the left: '''11''' 000011 '''10''' 0000000 (u+00C0), or '''11''' 000101 '''10''' 100000 (u+0160).
+## Convert the octets to hex., add percent in front, ready: %C3%80 (u+00C0), or %C5%A0 (u+0160).
+# If the first (left) of two groups starts with 1:
+#: Add '''111''' 00000 '''10''' to the left, then percent-encode three octects, %E0%??%??
+# If there are three groups, the first (left) starting with 00 (000001 up to 001111):
+#: Replace 00 by '''111''' 0, percent-encode three octects, ready, result %E?%??%??.
+# Otherwise it's at least 010000 000000 000000 (u+10000) needing '''four''' UTF-8 octets:
+#: '''1111''' 0000 '''10''' 010000 '''10''' 000000 '''10''' 000000 would be %F0%90%80%80.
+
+==URLs of pages within the projects==
+
+See [[w:Wikipedia:URLs]]. On other projects everything works the same, except that the domain names vary:
+
+*xx.wikipedia.org with xx the language code, see [[m:Complete list of language Wikipedias available]]
+*meta.wikimedia.org (meta.wikipedia.org redirects there)
+*xx.wiktionary.org
+*xx.wikiquote.org
+*xx.wikibooks.org
+*xx.wikisource.org
+*sep11.wikipedia.org
+
+A URL starting with www.wikipedia.org redirects to the corresponding one starting with en; only www.wikipedia.org itself leads to a portal page instead of the main page of the English Wikipedia: http://www.wikipedia.org
+
+In projects outside Wikimedia the "w/" in URLs like
+http://www.wikipedia.org/w/wiki.phtml?title=Main_Page&action=history is sometimes not used, sometimes different, e.g.:
+*http://www.disinfopedia.org/wiki.phtml?title=Disinfopedia_Main_Page&action=history
+*http://wikitravel.org/en/index.php?title=Main_Page&action=history
+
+The default is /wiki/wiki.phtml, with in [[DefaultSetting.php]] [http://cvs.sourceforge.net/viewcvs.py/wikipedia/phpwiki/newcodebase/DefaultSettings.php?rev=1.21&view=markup]:
+
+ $wgScriptPath = "/wiki";
+ $wgScript     = "{$wgScriptPath}/wiki.phtml";
+
+There may be other variations, compare:
+*http://en.wikipedia.org/wiki/Vancouver
+*http://wikitravel.org/en/Vancouver
+
+===Use in templates===
+For use in templates, note that all URLs on e.g. the English Wikipedia  can be written in the form
+
+<nowiki>http://</nowiki>en.wikipedia.org/w/index.php?title={{{1}}}
+
+This requires {{{1}}} to be written with underscores and escape codes (if applicable). To benefit from the conversion carried out by fullurl, two parameters are needed:
+
+<nowiki>{{fullurl:{{{1}}}|{{{2}}}}}</nowiki>
+
+(see [[Template talk:Url 2p]]). An example with the second parameter in fullurl fixed is {{tiw|ed}} containing the link <nowiki>[{{fullurl:Template:{{{1}}}|action=edit}} {{MediaWiki:Edit}} {{{2|{{{1}}}}}}].</nowiki>
+
+This works for a link in external link style to a page in the same project. We can use localurl for a link to a project which uses the same string in the URL between the server name and the question mark ([http://www.mediawiki.org/wiki/Help:$wgScript $wgScript], on Wikimedia "/w/index.php"), but not for links to other projects.
+
+==Old versions of pages==
+
+All old versions of all pages are numbered (with [[m:oldid|oldid]]) approximately in the order of becoming an old version, i.e. in chronological order of the next edit of the same page.
+
+*http://meta.wikimedia.org/w/wiki.phtml?title=Help:Link&oldid=53587 - normal link to old page
+*http://meta.wikimedia.org/w/wiki.phtml?oldid=53587 - no page name in the URL, goes to the correct page
+*http://meta.wikimedia.org/w/wiki.phtml?title=Help:Link&oldid=53588 - number and name do not correspond; the name is ignored
+*http://meta.wikimedia.org/w/wiki.phtml?title=abc&oldid=53587 - non-existing page name; oldid is ignored, works like going to a non-existing page, except for the links to assumed previous and next versions, and on editing, for the warning of editing an old version of a page.
+
+See also [[Help:Page history#Linking_to_a_specific_version_of_a_page|Linking to specific versions of a page]].
+
+==New pages==
+
+Pages are numbered with page_id (see [[m:page table]]) in order of creation.
+
+*http://meta.wikimedia.org/w/wiki.phtml?title=x&curid=9906 - gives the page with correct full name
+
+Conversely, most [[query]] output provides page names as well as page id's, e.g. http://meta.wikimedia.org/w/query.php?titles=Hilfe:Zeitleiste
+
+See also [[m:Multiple titles]].
+
+From [[m:MediaWiki 1.5|MediaWiki 1.5]]  page versions get a number "oldid" as soon as they are created; they are produced by variable <nowiki>{{REVISIONID}}</nowiki>. The URL is like in the previous section.
+
+==Edit==
+
+Examples:
+
+*Edit the whole page: http://meta.wikimedia.org/w/wiki.phtml?title=Help:URL&action=edit
+*Edit the 5th section: http://meta.wikimedia.org/w/wiki.phtml?title=Help:URL&action=edit&section=5
+*Add at the end: http://meta.wikimedia.org/w/wiki.phtml?title=Help:URL&action=edit&section=1000 (use large section number) - This appears to no longer work.
+*Ditto with [[Help:Edit summary#.22Post_a_comment.22_feature|"Post a comment" feature]]: http://meta.wikimedia.org/w/wiki.phtml?title=Help:URL&action=edit&section=new
+
+==Purge==
+
+In some cases of caching problems, to update a page it can help to  use "action=purge", in a URL like {{SERVER}}{{localurl:{{NAMESPACE}}:{{PAGENAMEE}}|action=purge}}
+
+==Miscellaneous==
+
+You can fetch the raw wikitext of a page using a URL like {{SERVER}}{{localurl:{{NAMESPACE}}:{{PAGENAMEE}}|action=raw}} .
+
+Other actions are view, watch, unwatch, delete, revert, rollback, unprotect, info, markpatrolled, validate, render, deletetrackback, and history.  (These rarely need to be entered explicitly, as the useful ones are prelinked at various tabs and buttons. Several of these actions require administrator privileges. Other users do not have the link; if they try the URL they get the message in [[MediaWiki:Badaccesstext]].)
+
+==Kinds of dead links==
+There can be various kinds of errors in the URL. With some the server is not even reached, with others the server takes some action. The server may also go to the correct page and just ignore a wrong parameter or anchor.
+
+*{{SERVER}}{{localurl:%abc}}
+*http://meta.wikimedia.or/
+*{{SERVER}}abc
+*http://met.mediawiki.org
+*{{SERVER}}/abc
+*http://meta.wikimedia.org/w/index.php?title=Help:URL&action=abc
+*http://meta.wikimedia.org/w/index.php?title=Help:URL&act=abc
+*http://meta.wikimedia.org/w/index.php?title=Help:URL#abc
+
+[[Category:帮助文档]]
+{{help G}}
